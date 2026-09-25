@@ -47,9 +47,9 @@ Ao final desta Etapa, cada aluno será avaliado individualmente nestas 6 compet�
 
 ---
 
-# 2. Modelagem da Aplicação e Arquitetura de Dados
+# 2. Modelagem da Aplicação e Arquitetura de Dados `Andre`
 
-## 2.1. Schema e Diagrama Entidade-Relacionamento
+## 2.1. Schema e Diagrama Entidade-Relacionamento `Andre`
 
 O serviço de notificações foi projetado para garantir o registro individualizado, a rastreabilidade e a persistência do histórico de avisos enviados aos moradores do condomínio. A modelagem de dados utiliza o ORM **Prisma** conectado a uma instância do banco de dados relacional **PostgreSQL hospedado na plataforma Serverless Neon**.
 
@@ -116,7 +116,7 @@ erDiagram
 *Tabelas criadas diretamente no painel da **Neon PostgreSQL**, mostrando os registros inseridos após os testes de confirmação de reserva*
 
 
-## 2.2. Integração e Infraestrutura Distribuída
+## 2.2. Integração e Infraestrutura Distribuída `Andre`
 
 A arquitetura do Backend do **Vaga Livre** foi projetada sob o paradigma de microsserviços/serviços distribuídos, visando alta disponibilidade, desacoplamento e tempo de resposta otimizado para o usuário final.
 
@@ -161,64 +161,122 @@ Para contornar o bloqueio de portas SMTP tradicionais (25, 465, 587) comum em in
 * A arquitetura adota a **Resend API**, realizando o envio de e-mails transacionais via chamadas **REST/HTTPS na porta 443**.
 * Essa abordagem elimina *timeouts* de rede (`ETIMEDOUT` / `ENETUNREACH`), garante entrega instantânea e isola falhas de infraestrutura de rede externa.
 
-# 3. Especificação Avançada de Endpoints
+# 3. Especificação Avançada de Endpoints `Andre`
 
-*(Esta seção atende diretamente à rubrica **H36b**)*
+Abaixo estão listados os contratos reais implementados no diretório [src/backend/andre](src/backend/andre) para o módulo de **Notificações**, detalhando os métodos HTTP, rotas, payloads de requisição/resposta, códigos de status e mecanismos de segurança da API.
 
-Abaixo devem estar listados os contratos reais que foram ou serão implementados no diretório [src/backend/](src/backend/). Cada endpoint deve ser detalhado descrevendo métodos HTTP, URLs, payloads aceitos e possíveis status codes.
+### 3.1. Relação Geral de Endpoints `Andre`
 
-### 3.1. Relação Geral de Endpoints
+| Método / Verbo | Caminho da Rota (URI)         | Descrição do Recurso / Ação                                    | Reclama Autenticação? | Responsável Técnico |
+| -------------- | ----------------------------- | -------------------------------------------------------------- | --------------------- | ------------------- |
+| `POST`         | `/notifications`              | Cria notificação no banco Neon e dispara e-mail via Resend API | Sim                   | André Lopes         |
+| `GET`          | `/notifications/user/:userId` | Listagem de todas as notificações gravadas de um morador       | Sim                   | André Lopes         |
+| `PATCH`        | `/notifications/:id/read`     | Atualiza o status da notificação para lida (`read: true`)      | Sim                   | André Lopes         |
+| `DELETE`       | `/notifications/:id`          | Remove um registro de notificação do histórico do usuário      | Sim                   | André Lopes         |
+---
 
-| Método / Verbo | Caminho da Rota (URI) | Descrição do Recurso / Ação | Reclama Autenticação? | Responsável Técnico |
-| :---: | :--- | :--- | :---: | :---: |
-| `POST` | `/api/v1/users/register` | Criação de novos usuários na plataforma | Não | [Nome do Aluno] |
-| `POST` | `/api/v1/auth/login` | Autenticação e geração de JWT | Não | [Nome do Aluno] |
-| `GET` | `/api/v1/orders` | Listagem paginada de pedidos com filtros de busca | Sim | [Nome do Aluno] |
-| `POST` | `/api/v1/orders` | Criação e despacho de um novo pedido de transporte | Sim | [Nome do Aluno] |
+### 3.2. Detalhamento dos Payloads de Requisição e Resposta (Exemplos) `Andre`
+
+#### Endpoint 1: `/notifications` (Criação e Disparo de Notificação)
+
+* **Verbo**: `POST`
+* **Headers Requeridos**: `Content-Type: application/json`
+* **Payload de Entrada (JSON)**:
+
+```
+{
+  "userId": "usr-882319",
+  "userEmail": "andre.lopes.1521271@sga.pucminas.br",
+  "title": "Reserva Confirmada",
+  "message": "Sua reserva para a vaga A-12 foi confirmada com sucesso!",
+  "type": "RESERVA_CONFIRMADA"
+}
+
+```
+
+* **Payload de Resposta de Sucesso (** **201 Created** **)**:
+
+```
+{
+  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "userId": "usr-882319",
+  "title": "Reserva Confirmada",
+  "message": "Sua reserva para a vaga A-12 foi confirmada com sucesso!",
+  "type": "RESERVA_CONFIRMADA",
+  "read": false,
+  "createdAt": "2026-09-24T22:39:42.102Z",
+  "updatedAt": "2026-09-24T22:39:42.102Z"
+}
+
+```
+
+* **Comportamento em caso de Erro (** **400 Bad Request** **\- Parâmetro Ausente)**:
+
+```
+{
+  "error": "Campos obrigatórios ausentes."
+}
+
+```
+
+* **Comportamento em caso de Erro Interno (** **500 Internal Server Error** **)**:
+
+```
+{
+  "error": "Erro ao processar notificação."
+}
+
+```
 
 ---
 
-### 3.2. Detalhamento dos Payloads de Requisição e Resposta (Exemplos)
+#### Endpoint 2: `/notifications/user/:userId` (Listagem de Notificações do Morador)
 
-#### Endpoint: `/api/v1/orders` (Criação de Pedidos)
-- **Verbo**: `POST`
-- **Headers Requeridos**: `Authorization: Bearer <token_jwt>`
-- **Payload de Entrada (JSON)**:
-  ```json
+* **Verbo**: `GET`
+* **Parâmetros de Rota**: `userId` (string UUID do morador)
+* **Payload de Resposta de Sucesso (** **200 OK** **)**:
+
+```
+[
   {
-    "userId": 45,
-    "itens": [
-      { "produtoId": 302, "quantidade": 2 }
-    ],
-    "enderecoEntrega": {
-      "rua": "Av. Dom José Gaspar",
-      "numero": "500",
-      "cidade": "Belo Horizonte"
-    }
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "userId": "usr-882319",
+    "title": "Reserva Confirmada",
+    "message": "Sua reserva para a vaga A-12 foi confirmada com sucesso!",
+    "type": "RESERVA_CONFIRMADA",
+    "read": false,
+    "createdAt": "2026-09-24T22:39:42.102Z"
   }
-  ```
-- **Payload de Resposta de Sucesso (`201 Created`)**:
-  ```json
-  {
-    "orderId": 8092,
-    "status": "pending",
-    "createdAt": "2026-07-28T14:32:00Z",
-    "previsaoEntrega": "2026-07-28T16:00:00Z"
-  }
-  ```
-- **Comportamento em caso de Erro (`400 Bad Request` - Parâmetro Ausente)**:
-  ```json
-  {
-    "errorCode": "INVALID_PARAMETERS",
-    "message": "O campo 'enderecoEntrega.cidade' é obrigatório."
-  }
-  ```
+]
+
+```
 
 ---
 
-### 3.3. Segurança e Autorização
+#### Endpoint 3: `/notifications/:id/read` (Marcar Notificação como Lida)
 
-[Descreva como a segurança do canal é implementada estruturalmente. Como é feita a geração de token, qual algoritmo criptográfico de assinatura é empregado (ex: RS256, HS256), tempo de expiração do JWT e se há distinção baseada em perfis de acesso (RBAC - Role Based Access Control) entre usuários (por exemplo, Administrador, Entregador, Cliente).]
+* **Verbo**: `PATCH`
+* **Parâmetros de Rota**: `id` (string UUID da notificação)
+* **Payload de Resposta de Sucesso (** **200 OK** **)**:
+
+```
+{
+  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "read": true,
+  "updatedAt": "2026-09-24T22:45:10.512Z"
+}
+```
+
+---
+
+### 3.3. Segurança e Autorização `Andre`
+
+A segurança da infraestrutura e do tráfego de dados da API de Notificações é fundamentada em quatro pilares principais:
+
+1. **Criptografia em Trânsito (HTTPS/TLS)**: Toda a comunicação entre a aplicação cliente (Frontend) e a API Backend hospedada no **Render** ocorre através de conexões seguras criptografadas sob o protocolo **HTTPS (TLS 1.3)** na porta padrão `443`.
+2. **Política de Origem Cruzada (CORS)**: O servidor Express implementa o middleware `cors()` configurado para autorizar exclusivamente requisições vinda do domínio do Frontend do **Vaga Livre**, prevenindo ataques de origens não autorizadas (*Cross-Site Request Forgery / CSRF*).
+3. **Gerenciamento de Credenciais e Variáveis de Ambiente**: Chaves sensíveis como a URL do banco PostgreSQL Neon (`DATABASE_URL`) e a chave da API do Resend (`RESEND_API_KEY`) são isoladas e mantidas estritamente no ambiente do servidor na nuvem (**Render Environment Variables**), nunca expostas no código-fonte nem enviadas ao cliente/navegador.
+4. **Tráfego Seguro de E-mails via HTTPS**: Para evitar varreduras de porta e ataques de *man-in-the-middle* comuns em conexões SMTP puras, a API dispara e-mails através do SDK oficial da **Resend API**, autenticando via chave de API criptografada e realizando requisições HTTPS REST diretas na porta `443`.
 
 ---
 
