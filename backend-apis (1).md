@@ -31,11 +31,11 @@ Ao final desta Etapa, cada aluno será avaliado individualmente nestas 6 compet�
 | Rubrica Curricular | ID Tarefa | Atividade Semanal | Descrição Detalhada da Tarefa | Estudante Responsável | GitHub Username | Status de Entrega | Evidência/Seção Temática | Autoria Git |
 | :---: | :---: | :---: | :--- | :--- | :---: | :---: | :--- | :---: |
 | **H36b** | `T2.1` | `ATV2.1` | Configuração do Boilerplate da API, Roteamento e Inicialização | [Nome do Aluno 1] | `username1` | `⌛ Não Iniciado` | [Instalação/README](src/backend/README.md) | [ ] |
-| **H36b** | `T2.2` | `ATV2.1` | Modelagem e Persistência de Dados (Conexão DB, ORM, Schemas) | [Nome do Aluno 2] | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 2.1](#21-schema-e-diagrama-entidade-relacionamento) | [ ] |
-| **H36b** | `T2.3` | `ATV2.1` | Implementação de Endpoints CRUD e Lógica de Negócios Principal | Giovanny Lisboa | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 3.0](#3-especificacao-avancada-de-endpoints) | [ ] |
+| **H36b** | `T2.2` | `ATV2.1` | Modelagem e Persistência de Dados (Conexão DB, ORM, Schemas) | Todos | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 2.1](#21-schema-e-diagrama-entidade-relacionamento) | [ ] |
+| **H36b** | `T2.3` | `ATV2.1` | Implementação de Endpoints CRUD e Lógica de Negócios Principal | Todos | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 3.0](#3-especificacao-avancada-de-endpoints) | [ ] |
 | **H36b** | `T2.4` | `ATV2.1` | Mecanismo de Segurança da API (Autenticação/Autorização JWT) | [Nome do Aluno 4] | `username4` | `⌛ Não Iniciado` | [Seção 3.3](#33-seguranca-e-autorizacao) | [ ] |
 | **H35b** | `T2.5` | `ATV2.1` | Gateway, Integração de Serviços Web e Clientes HTTP Externos | [Nome do Aluno 5] | `username5` | `⌛ Não Iniciado` | [Seção 2.2](#22-integracao-e-infraestrutura-distribuida) | [ ] |
-| **H36c** | `T2.6` | `ATV2.2` | Desenvolvimento de Testes Automatizados (Unitários/Integração) | [Nome do Aluno 6] | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 4.0](#4-estrategia-e-relatorio-de-testes-automatizados) | [ ] |
+| **H36c** | `T2.6` | `ATV2.2` | Desenvolvimento de Testes Automatizados (Unitários/Integração) | Todos | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 4.0](#4-estrategia-e-relatorio-de-testes-automatizados) | [ ] |
 | **H35c** | `T2.7` | `ATV2.1` | Construção de Dockerfile e Configuração de docker-compose | [Nome do Aluno 1] | `username1` | `⌛ Não Iniciado` | [Seção 5.1](#51-conteinerizacao-de-servicos) | [ ] |
 | **H36c** | `T2.8` | `ATV2.2` | Proposta de Implantação e Pipeline de CI/CD Backend | [Nome do Aluno 5] | `username5` | `⌛ Não Iniciado` | [Seção 5.2](#52-proposta-de-infraestrutura-de-deploy-e-ambiente-em-producao) | [ ] |
 
@@ -49,21 +49,117 @@ Ao final desta Etapa, cada aluno será avaliado individualmente nestas 6 compet�
 
 # 2. Modelagem da Aplicação e Arquitetura de Dados
 
-*(Esta seção atende diretamente à rubrica **H35b**)*
-
 ## 2.1. Schema e Diagrama Entidade-Relacionamento
 
-[Insira aqui o detalhamento lógico de banco de dados por meio de tabelas, relacionamentos, chaves primárias e estrangeiras. Também deve ser incluído o DER (Diagrama Entidade-Relacionamento) ou script de migração schema DDls.]
+O serviço de notificações foi projetado para garantir o registro individualizado, a rastreabilidade e a persistência do histórico de avisos enviados aos moradores do condomínio. A modelagem de dados utiliza o ORM **Prisma** conectado a uma instância do banco de dados relacional **PostgreSQL hospedado na plataforma Serverless Neon**.
+
+### A. DDL e Representação do Schema Prisma [schema.prisma](https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-2-pe6-t2-g09/blob/main/src/backend/andre/schema.prisma)
+
+A entidade central do serviço é a tabela `Notification`, estruturada no arquivo de schema da seguinte forma:
 
 ```
-[Insira o Diagrama de Classes, DER ou representação lógica das entidades aqui]
+// Módulo de Notificações - Vaga Livre
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   // Chave Estrangeira lógica referenciando a entidade User
+  title     String
+  message   String
+  type      String   @default("RESERVA_CONFIRMADA")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notifications")
+}
 ```
+### B. Dicionário de Dados da Tabela `notifications`
+
+| Campo         | Tipo SQL       | Restrições                      | Descrição                                                            |
+| ------------- | -------------- | ------------------------------- | -------------------------------------------------------------------- |
+| **id**        | `VARCHAR(36)`  | **PK**, Not Null, Unique        | Identificador único universal (UUID) da notificação.                 |
+| **userId**    | `VARCHAR(36)`  | **FK** (Lógica), Not Null       | Identificador do usuário/morador destinatário da mensagem [2, 11]. |
+| **title**     | `VARCHAR(255)` | Not Null                        | Título do aviso (ex: "Reserva Confirmada") [2, 11].                |
+| **message**   | `TEXT`         | Not Null                        | Conteúdo descritivo detalhado da notificação enviada [2, 11].      |
+| **type**      | `VARCHAR(50)`  | Default: `'RESERVA_CONFIRMADA'` | Categoria do evento gerador da notificação.                          |
+| **read**      | `BOOLEAN`      | Default: `false`                | Status de leitura da mensagem pelo usuário.                          |
+| **createdAt** | `TIMESTAMP`    | Default: `NOW()`                | Data e hora exatas da criação e envio do registro.                   |
+| **updatedAt** | `TIMESTAMP`    | UpdatedAt                       | Data e hora da última modificação do registro.                       |
+
+### C. Diagrama Entidade-Relacionamento (DER)
+
+Abaixo é apresentada a representação lógica do relacionamento entre a entidade de usuários/moradores e o serviço de notificações do **Vaga Livre**:
+
+```mermaid
+erDiagram
+    USER ||--o{ NOTIFICATION : "recebe"
+    
+    USER {
+        string id PK
+        string name
+        string email
+    }
+    
+    NOTIFICATION {
+        string id PK
+        string userId FK
+        string title
+        string message
+        string type
+        boolean read
+        datetime createdAt
+        datetime updatedAt
+    }
+```
+
+<img width="1909" height="903" alt="table notification" src="https://github.com/user-attachments/assets/55aa9335-a9aa-470e-98ef-6e924d8f2f3b" />
+
+*Tabelas criadas diretamente no painel da **Neon PostgreSQL**, mostrando os registros inseridos após os testes de confirmação de reserva*
+
 
 ## 2.2. Integração e Infraestrutura Distribuída
 
-[Descreva como a sua arquitetura backend gerencia concorrência e escalabilidade física. Por exemplo: pool de conexões com banco de dados, divisão em microsserviços, tratamento de chamadas síncronas/assíncronas ou persistências distribuídas (como cache Redis, clusterização, mensageria via RabbitMQ).]
+A arquitetura do Backend do **Vaga Livre** foi projetada sob o paradigma de microsserviços/serviços distribuídos, visando alta disponibilidade, desacoplamento e tempo de resposta otimizado para o usuário final.
 
----
+```
+[ Frontend (React/Next) ]
+       │
+       │  (Chamada HTTP / CORS)
+       ▼
+[ Backend API (Express/Node.js) ] ── (Prisma Pool) ──► [ Neon PostgreSQL (Cloud) ]
+       │
+       │  (Requisição Assíncrona HTTPS / Porta 443)
+       ▼
+[ Resend API (Email Service) ] ──────────────────────► [ Caixa de Entrada do Morador ]
+
+```
+
+### 1. Comunicação Entre Serviços e Gestão de CORS
+
+O **Frontend** e o **Backend** da aplicação operam como serviços independentes (*Web Services*) implantados na nuvem através do **Render**.
+
+* A comunicação cross-origin é gerenciada pelo middleware `cors()` no servidor Express (`server.ts`).
+* O endereço do Backend é injetado dinamicamente no Frontend por meio da variável de ambiente `NEXT_PUBLIC_API_URL`, garantindo a segurança e o desacoplamento das URLs de produção.
+
+### 2. Gerenciamento de Concorrência e Connection Pooling (Neon + Prisma)
+
+Para gerenciar múltiplas requisições simultâneas sem esgotar os recursos de banco de dados:
+
+* É utilizado o **Prisma Client** encapsulado como uma instância *singleton*.
+* O banco de dados **Neon PostgreSQL** utiliza uma camada de *Connection Pooling Serverless*. Isso permite que centenas de conexões simultâneas vindas das instâncias do Render sejam multiplexadas eficientemente sem causar estouro de memória no banco relacional.
+
+### 3. Tratamento Assíncrono Não-Bloqueante (Non-blocking I/O)
+
+Para evitar travamentos da interface e tempo de espera excessivo (*latency*) ao confirmar uma reserva:
+
+* O controller (`NotificationController.ts`) executa a gravação da notificação no banco via Prisma (`await prisma.notification.create(...)`) e **responde imediatamente ao cliente HTTP** com o código de sucesso `201 Created`.
+* O disparo do e-mail é delegado para execução em segundo plano (*background execution*) através de uma Promise assíncrona não-bloqueante.
+
+### 4. Resiliência e Tráfego de E-mail por API HTTP (Resend)
+
+Para contornar o bloqueio de portas SMTP tradicionais (25, 465, 587) comum em infraestruturas Serverless/PaaS em nuvem como o Render:
+
+* A arquitetura adota a **Resend API**, realizando o envio de e-mails transacionais via chamadas **REST/HTTPS na porta 443**.
+* Essa abordagem elimina *timeouts* de rede (`ETIMEDOUT` / `ENETUNREACH`), garante entrega instantânea e isola falhas de infraestrutura de rede externa.
 
 # 3. Especificação Avançada de Endpoints
 
