@@ -282,21 +282,30 @@ A segurança da infraestrutura e do tráfego de dados da API de Notificações �
 
 # 4. Estratégia e Relatório de Testes Automatizados
 
-*(Esta seção atende diretamente à rubrica **H36c**)*
+A estratégia de testes automatizados adotada pela equipe foca em garantir a confiabilidade e o correto funcionamento de cada serviço (CRUD) isoladamente. Conforme alinhado, cada membro da equipe é responsável por desenvolver os testes unitários e de integração do seu respectivo serviço. 
 
-[Explique a estratégia adotada pela equipe para testar as rotas de backend. Detalhe como rodar os testes localmente no repositório. O processo de avaliação pedagógica identificará a implementação física destes testes no diretório de código para validar as metas da rubrica.]
+Para a arquitetura do projeto (Node.js com TypeScript e Prisma), optamos por utilizar a técnica de **Mocking** (simulação). Com isso, simulamos as respostas do banco de dados (Neon) e as chamadas para serviços externos (como disparo de e-mails via Resend/Nodemailer). Essa estratégia protege o banco de dados de produção contra poluição por dados fictícios, economiza as cotas de consumo de APIs de terceiros e garante que os testes rodem de forma extremamente rápida.
 
-1. **Ferramenta de Asserção Utilizada**: (Ex: `Jest` em Node, `pytest` em Python, `xUnit/NUnit` em .NET).
+1. **Ferramenta de Asserção Utilizada**: **Vitest** (framework nativo e otimizado para TypeScript) integrado ao **Supertest** (para testar as rotas e requisições HTTP localmente).
 2. **Método de Execução do Comando de Teste**:
-   *(Exemplo)*: `npm run test:cov` ou `dotnet test`.
-3. **Cobertura Esperada/Alcançada**: (Porcentagem geral de caminhos de controle avaliados).
+   Para rodar a suíte de testes localmente, basta clonar o repositório, instalar as dependências com `npm install` e executar o comando no terminal (dentro da pasta do backend):
+   `npm run test` (que executa o `vitest run` por debaixo dos panos).
+3. **Cobertura Esperada/Alcançada**: Alcançamos 100% de aprovação nos testes criados para o Serviço de Notificações, cobrindo as validações de dados (falhas propositais) e os fluxos de sucesso do CRUD.
 
-### Exemplo de Quadro de Cobertura de Testes:
+### Quadro de Cobertura de Testes:
 
-| Módulo do Sistema | Tipo de Teste (Unitário/Integração) | Cenários Avaliados | Status da Suíte |
-| :--- | :--- | :--- | :---: |
-| **Módulo de Autenticação** | Unitário | Geração do JWT, senhas incorretas, usuários inexistentes | ✔️ Passou |
-| **Serviço de Pedidos** | Integração (com DB mockado) | Criação de orders, validação de itens esgotados, cálculo de frete | ✔️ Passou |
+| Módulo do Sistema | Tipo de Teste | Cenários Avaliados | Status da Suíte | Responsável |
+| :--- | :--- | :--- | :---: | :--- |
+| **Serviço de Notificações** | Unitário | Criação: Validação de campos obrigatórios ausentes (Erro 400). | ✔️ Passou | André Lopes |
+| **Serviço de Notificações** | Integração | POST: Criação de notificação e disparo de e-mail mockado (Status 201). | ✔️ Passou | André Lopes |
+| **Serviço de Notificações** | Integração | GET: Listagem de notificações por usuário específico (Status 200). | ✔️ Passou | André Lopes |
+| **Serviço de Notificações** | Integração | PATCH: Atualização de notificação (marcar como lida) (Status 200). | ✔️ Passou | André Lopes |
+| **Serviço de Notificações** | Integração | DELETE: Exclusão permanente de notificação (Status 204). | ✔️ Passou | André Lopes |
+
+### Evidência de Execução dos Testes
+Abaixo está o registro da execução (log do terminal) atestando que todas as suítes passaram com sucesso:
+
+<img width="1084" height="460" alt="testes terminal" src="https://github.com/user-attachments/assets/d63f6b00-f749-49e1-852d-b057e8f0d807" />
 
 ---
 
