@@ -161,6 +161,10 @@ Para contornar o bloqueio de portas SMTP tradicionais (25, 465, 587) comum em in
 * A arquitetura adota a **Resend API**, realizando o envio de e-mails transacionais via chamadas **REST/HTTPS na porta 443**.
 * Essa abordagem elimina *timeouts* de rede (`ETIMEDOUT` / `ENETUNREACH`), garante entrega instantânea e isola falhas de infraestrutura de rede externa.
 
+<img width="1903" height="664" alt="logs resend" src="https://github.com/user-attachments/assets/46585dde-2053-4382-b51d-48629cec8e1c" /> *Log de disparo bem-sucedido via Resend API registrado no ambiente Resend*
+
+<img width="1846" height="400" alt="email recebido" src="https://github.com/user-attachments/assets/1de8fadf-6755-465e-987c-a835f0b0eb9d" /> *E-mail transacional recebido pelo morador após a confirmação da reserva na interface*
+
 # 3. Especificação Avançada de Endpoints `Andre`
 
 Abaixo estão listados os contratos reais implementados no diretório [src/backend/andre](src/backend/andre) para o módulo de **Notificações**, detalhando os métodos HTTP, rotas, payloads de requisição/resposta, códigos de status e mecanismos de segurança da API.
