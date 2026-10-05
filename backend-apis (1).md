@@ -65,56 +65,189 @@ Ao final desta Etapa, cada aluno será avaliado individualmente nestas 6 compet�
 
 ---
 
+Analisando a **Seção 3 (Especificação Avançada de Endpoints)** do seu esboço em comparação com o template:
+
+### 📊 Análise de Comparação
+
+1. **Atendimento à Rubrica H36b**: Declarado no cabeçalho.
+2. **3.1. Relação Geral de Endpoints**: O esboço possui todos os endpoints do projeto VagaLivre. **Ajuste necessário:** Alinhar o nome das colunas da tabela ao padrão exato do template (`Método / Verbo`, `Caminho da Rota (URI)`, `Descrição do Recurso / Ação`, `Reclama Autenticação?` e `Responsável Técnico`).
+3. **3.2. Detalhamento dos Payloads**: O esboço contém os payloads reais do VagaLivre (substituindo os exemplos de *pedidos* do template). **Ajuste necessário:** Padronizar a formatação das subseções de cada endpoint utilizando os rótulos do template (`- **Verbo**:`, `- **Headers Requeridos**:`, `- **Payload de Entrada (JSON)**:`, `- **Payload de Resposta de Sucesso (...)**:`, etc.).
+4. **3.3. Segurança e Autorização**: O esboço já atende a todos os pontos (CORS, HMAC-SHA256, expiração de 24h, tokens Bearer e controle de acesso baseado em papéis - RBAC entre `manager` e `resident`).
+
+---
+
 # 3. Especificação Avançada de Endpoints
 
 *(Esta seção atende diretamente à rubrica **H36b**)*
 
-Abaixo devem estar listados os contratos reais que foram ou serão implementados no diretório [src/backend/](src/backend/). Cada endpoint deve ser detalhado descrevendo métodos HTTP, URLs, payloads aceitos e possíveis status codes.
+Abaixo estão listados os contratos reais implementados e disponibilizados no diretório [`src/backend/`](src/backend/). Cada endpoint encontra-se detalhado descrevendo métodos HTTP, caminhos de rota, mecanismos de autenticação, payloads de requisição/resposta e comportamentos de erro. Em ambiente de produção, o acesso público é centralizado pelo API Gateway.
 
 ### 3.1. Relação Geral de Endpoints
 
 | Método / Verbo | Caminho da Rota (URI) | Descrição do Recurso / Ação | Reclama Autenticação? | Responsável Técnico |
 | :---: | :--- | :--- | :---: | :---: |
-| `POST` | `/api/v1/users/register` | Criação de novos usuários na plataforma | Não | [Nome do Aluno] |
-| `POST` | `/api/v1/auth/login` | Autenticação e geração de JWT | Não | [Nome do Aluno] |
-| `GET` | `/api/v1/orders` | Listagem paginada de pedidos com filtros de busca | Sim | [Nome do Aluno] |
-| `POST` | `/api/v1/orders` | Criação e despacho de um novo pedido de transporte | Sim | [Nome do Aluno] |
+| `GET` | `/health` | Verificação de saúde (*health check*) do serviço e gateway | Não | Equipe |
+| `POST` | `/api/v1/auth/login` | Autenticação de morador/síndico e geração de token HMAC | Não | Pedro |
+| `GET` | `/api/v1/auth/me` | Recuperação dos dados do usuário autenticado na sessão | Sim (Bearer) | Pedro |
+| `POST` | `/api/v1/auth/logout` | Encerramento da sessão no lado do cliente | Sim | Pedro |
+| `GET` | `/api/v1/condominiums` | Listagem de condomínios cadastrados | Sim | Roberta |
+| `GET` | `/api/v1/condominiums/:id` | Busca detalhada de um condomínio específico por ID | Sim | Roberta |
+| `POST` | `/api/v1/condominiums` | Cadastro de novo condomínio | Sim (Síndico / Admin) | Roberta |
+| `GET` | `/api/v1/users` | Listagem de usuários com filtros por status e condomínio | Sim (Síndico / Admin) | Roberta |
+| `GET` | `/api/v1/users/:id` | Consulta de perfil de usuário específico | Sim | Roberta |
+| `POST` | `/api/v1/users` | Cadastro de usuário (1º cadastro do condomínio vira `manager` aprovado) | Não (Onboarding) | Roberta |
+| `PATCH` | `/api/v1/users/:id` | Atualização de perfil ou alteração de status (`approved` / `denied`) | Sim (Síndico / Próprio) | Roberta |
+| `DELETE` | `/api/v1/users/:id` | Remoção de usuário do sistema | Sim (Admin) | Roberta |
+| `GET` | `/api/v1/spots` | Consulta e listagem de vagas com filtros (`q`, `type`, `status`, `date`) | Sim | Allan |
+| `GET` | `/api/v1/spots/:id` | Detalhamento de uma vaga de garagem específica | Sim | Allan |
+| `GET` | `/api/v1/reservations` | Consulta de reservas com filtros por usuário e vaga | Sim | Gustavo |
+| `GET` | `/api/v1/reservations/:id` | Detalhes de uma reserva específica | Sim | Gustavo |
+| `POST` | `/api/v1/reservations` | Criação de reserva com validação de regras de agenda e conflitos | Sim | Gustavo |
+| `DELETE` | `/api/v1/reservations/:id` | Cancelamento de reserva existente | Sim (Dono da reserva) | Gustavo |
+| `GET` | `/notifications/user/:userId` | Consulta do histórico de avisos e notificações do morador | Sim | André |
+| `POST` | `/notifications` | Registro de novo aviso e disparo de e-mail transacional | Sim | André |
+| `PATCH` | `/notifications/:id/read` | Atualização de status da notificação para lida | Sim | André |
+| `DELETE` | `/notifications/:id` | Exclusão de aviso do histórico | Sim | André |
+| `GET` / `POST` / `PUT` / `DELETE` | `/api/ParkingSpots` | Endpoints CRUD HATEOAS para gestão de vagas (.NET ASP.NET Core) | Sim | Giovanny |
 
 ---
 
 ### 3.2. Detalhamento dos Payloads de Requisição e Resposta (Exemplos)
 
-#### Endpoint: `/api/v1/orders` (Criação de Pedidos)
+#### Endpoint: `/api/v1/auth/login` (Autenticação de Usuário)
 - **Verbo**: `POST`
-- **Headers Requeridos**: `Authorization: Bearer <token_jwt>`
+- **Headers Requeridos**: `Content-Type: application/json`
 - **Payload de Entrada (JSON)**:
   ```json
   {
-    "userId": 45,
-    "itens": [
-      { "produtoId": 302, "quantidade": 2 }
-    ],
-    "enderecoEntrega": {
-      "rua": "Av. Dom José Gaspar",
-      "numero": "500",
-      "cidade": "Belo Horizonte"
+    "email": "teste@vagalivre.com",
+    "password": "123456"
+  }
+  ```
+- **Payload de Resposta de Sucesso (`200 OK`)**:
+  ```json
+  {
+    "message": "Login realizado com sucesso.",
+    "data": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "user": {
+        "id": "user-demo",
+        "name": "Morador Teste",
+        "email": "teste@vagalivre.com",
+        "role": "resident",
+        "status": "approved"
+      }
     }
+  }
+  ```
+- **Comportamento em caso de Erro (`401 Unauthorized` - Credenciais Inválidas)**:
+  ```json
+  {
+    "message": "Credenciais inválidas ou conta pendente de aprovação."
+  }
+  ```
+
+#### Endpoint: `/api/v1/auth/me` (Validação de Sessão)
+- **Verbo**: `GET`
+- **Headers Requeridos**: `Authorization: Bearer <token_hmac>`
+- **Payload de Resposta de Sucesso (`200 OK`)**:
+  ```json
+  {
+    "data": {
+      "id": "user-demo",
+      "name": "Morador Teste",
+      "email": "teste@vagalivre.com",
+      "role": "resident",
+      "status": "approved"
+    }
+  }
+  ```
+- **Comportamento em caso de Erro (`401 Unauthorized` - Token Expirado/Inválido)**:
+  ```json
+  {
+    "message": "Token de acesso inválido ou expirado."
+  }
+  ```
+
+#### Endpoint: `/api/v1/spots` (Listagem e Filtro de Vagas)
+- **Verbo**: `GET`
+- **Headers Requeridos**: `Authorization: Bearer <token_hmac>`
+- **Parâmetros de Busca (Query Params)**: `q`, `type` (`compact` | `standard` | `suv` | `motorcycle`), `status` (`available` | `occupied`), `date` (`YYYY-MM-DD`)
+- **Payload de Resposta de Sucesso (`200 OK`)**:
+  ```json
+  {
+    "data": [
+      {
+        "id": "spot-demo",
+        "number": "A-01",
+        "type": "standard",
+        "location": "Subsolo 1",
+        "isAvailable": true,
+        "ownerId": "user-demo",
+        "availability": [],
+        "reservations": []
+      }
+    ]
+  }
+  ```
+
+#### Endpoint: `/api/v1/reservations` (Criação de Reserva)
+- **Verbo**: `POST`
+- **Headers Requeridos**: `Authorization: Bearer <token_hmac>`, `Content-Type: application/json`
+- **Payload de Entrada (JSON)**:
+  ```json
+  {
+    "spotId": "spot-demo",
+    "userId": "user-demo",
+    "startTime": "2026-10-08T08:00:00Z",
+    "endTime": "2026-10-10T18:00:00Z",
+    "vehiclePlate": "XYZ-9A87"
   }
   ```
 - **Payload de Resposta de Sucesso (`201 Created`)**:
   ```json
   {
-    "orderId": 8092,
-    "status": "pending",
-    "createdAt": "2026-07-28T14:32:00Z",
-    "previsaoEntrega": "2026-07-28T16:00:00Z"
+    "message": "Vaga reservada com sucesso!",
+    "data": {
+      "id": "res-1029",
+      "spotId": "spot-demo",
+      "userId": "user-demo",
+      "startTime": "2026-10-08T08:00:00Z",
+      "endTime": "2026-10-10T18:00:00Z",
+      "vehiclePlate": "XYZ-9A87"
+    }
   }
   ```
-- **Comportamento em caso de Erro (`400 Bad Request` - Parâmetro Ausente)**:
+- **Comportamento em caso de Erro (`409 Conflict` - Conflito de Agenda)**:
   ```json
   {
-    "errorCode": "INVALID_PARAMETERS",
-    "message": "O campo 'enderecoEntrega.cidade' é obrigatório."
+    "message": "A vaga selecionada já possui reserva no período informado."
+  }
+  ```
+
+#### Endpoint: `/api/v1/users` (Cadastro de Usuário)
+- **Verbo**: `POST`
+- **Headers Requeridos**: `Content-Type: application/json`
+- **Payload de Entrada (JSON)**:
+  ```json
+  {
+    "name": "Novo Morador",
+    "email": "morador@vagalivre.com",
+    "password": "senhaSegura123",
+    "condominiumId": "condo-01"
+  }
+  ```
+- **Payload de Resposta de Sucesso (`201 Created`)**:
+  ```json
+  {
+    "message": "Usuário cadastrado com sucesso. Aguardando aprovação do síndico.",
+    "data": {
+      "id": "user-new",
+      "name": "Novo Morador",
+      "email": "morador@vagalivre.com",
+      "role": "resident",
+      "status": "pending"
+    }
   }
   ```
 
@@ -122,7 +255,15 @@ Abaixo devem estar listados os contratos reais que foram ou serão implementados
 
 ### 3.3. Segurança e Autorização
 
-[Descreva como a segurança do canal é implementada estruturalmente. Como é feita a geração de token, qual algoritmo criptográfico de assinatura é empregado (ex: RS256, HS256), tempo de expiração do JWT e se há distinção baseada em perfis de acesso (RBAC - Role Based Access Control) entre usuários (por exemplo, Administrador, Entregador, Cliente).]
+A segurança do canal de comunicação e o controle de acesso ao ecossistema de APIs do **VagaLivre** foram estruturados em quatro camadas complementares:
+
+1. **CORS (Cross-Origin Resource Sharing):** Habilitado em todos os microsserviços e no API Gateway para restrição e suporte seguro às requisições originadas dos clientes Web e Mobile.
+2. **Gestão de Segredos e Variáveis de Ambiente:** Credenciais sensíveis (como `DATABASE_URL`, `JWT_SECRET` e tokens de serviço de e-mail) não são armazenadas no repositório Git, sendo injetadas diretamente através das variáveis de ambiente na plataforma de hospedagem Render. O arquivo `.env` é mantido no `.gitignore`.
+3. **Autenticação por Token de Sessão (HMAC-SHA256):** O serviço de identidade assina os tokens no momento do login utilizando a biblioteca criptográfica nativa do Node.js (`crypto.createHmac("sha256", JWT_SECRET)`). O token expede um *payload* contendo `{ id, email, role, exp }` com validade de **24 horas**. O cliente deve transmitir o cabeçalho `Authorization: Bearer <token>` em todas as rotas protegidas.
+4. **Controle de Acesso Baseado em Papéis (RBAC):**
+   - Papel **`manager` (Síndico):** Possui privilégios para criar novos condomínios, visualizar todos os moradores do condomínio e alterar o status de aprovação de novos cadastros (`approved` / `denied`).
+   - Papel **`resident` (Morador):** Possui permissão para consultar vagas disponíveis, realizar reservas de vagas e gerenciar seus próprios dados.
+   - **Validação de Status e Posse:** O login e o acesso às funcionalidades principais são restritos a contas com status `approved`. Operações sensíveis de escrita/exclusão (como cancelar uma reserva) validam se o `userId` requisitante corresponde ao proprietário do recurso, retornando erro `403 Forbidden` em caso de divergência.
 
 ---
 
