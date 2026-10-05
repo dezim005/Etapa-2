@@ -1,347 +1,409 @@
 # ⚙️ Etapa 2: APIs, Web Services e Persistência de Dados Distribuída
 
-Este documento serve como diretriz mestre de engenharia e repositório de evidências para a **Etapa 2: Desenvolvimento de APIs, Web Services e Persistência**. Ele foi estruturado para orientar o desenvolvimento prático do backend distribuído e permitir o acompanhamento e auto-gestão das atividades pelos alunos.
+Este documento reúne as evidências de engenharia do backend distribuído do **VagaLivre**. O código correspondente está em [`src/backend/`](./).
 
 ---
 
 ## 🎯 Rubricas de Avaliação desta Etapa
 
-Ao final desta Etapa, cada aluno será avaliado individualmente nestas 6 competências (incluindo oportunidades de desenvolvimento e reavaliação):
-
-1. **H34a-SI-G: Gerenciar e documentar serviços de TI**: Gerenciar e documentar serviços de TI, de forma clara e objetiva (Reavaliação teórica e prática a partir do gerenciamento de serviços no backend em [src/backend/](src/backend/)).
-2. **H35b-SI-G: Planejar, desenvolver e gerenciar uma arquitetura de aplicação distribuída**: Desenvolver uma arquitetura de aplicação distribuída (Medido no código em [src/backend/](src/backend/) e na seção [Modelagem da Aplicação e Arquitetura de Dados](#2-modelagem-da-aplicacao-e-arquitetura-de-dados)).
-3. **H35c-SI-G: Planejar, desenvolver e gerenciar uma arquitetura de aplicação distribuída**: Gerenciar uma arquitetura de aplicação distribuída, testando, implantando e avaliando a solução (Medido na seção [Instruções de Implantação e DevOps](#5-instrucoes-de-implantacao-e-devops)).
-4. **H36a-SI-G: Planejar, desenvolver e gerenciar APIs e Web Services**: Planejar e documentar APIs e Web Services, de forma clara e objetiva (Medido na seção [Especificação Avançada de Endpoints](#3-especificacao-avancada-de-endpoints) e atualizações no design de contratos).
-5. **H36b-SI-G: Planejar, desenvolver e gerenciar APIs e Web Services**: Desenvolver APIs e Web Services (Medido em [src/backend/](src/backend/) e na construção real dos endpoints).
-6. **H36c-SI-G: Planejar, desenvolver e gerenciar APIs e Web Services**: Gerenciar APIs e Web Services, testando, implantando e avaliando a solução (Medido na seção [Estratégia e Relatório de Testes Automatizados](#4-estrategia-e-relatorio-de-testes-automatizados)).
+1. **H34a** — Gerenciar e documentar serviços de TI (código em `src/backend/`).
+2. **H35b** — Arquitetura distribuída e modelagem de dados (seção 2).
+3. **H35c** — Implantação, conteinerização e DevOps (seção 5).
+4. **H36a** — Documentação de contratos das APIs (seção 3).
+5. **H36b** — Implementação dos endpoints (código em `src/backend/`).
+6. **H36c** — Testes automatizados das APIs (seção 4).
 
 ---
 
 ## 📅 QUADRO DE CONTRIBUIÇÃO REAL (ETAPA 2)
 
-**Atenção alunos:** Preencham esta tabela para atualizar o andamento das tarefas e quem foi o responsável técnico pela construção do backend. Os nomes, usuários e links de evidências devem corresponder aos entregáveis em [src/backend/](src/backend/).
-
 - **Status admitidos**: `⌛ Não Iniciado` | `📝 Em Progresso` | `✔️ Entregue`
-- **Autoria Git**: Indica se há commits desse estudante nos arquivos da tarefa.
 
-**Atividades Semanais desta Etapa** (ver [Cronograma do Semestre](contexto.md#-cronograma-do-semestre-semana--periodo)):
-- `ATV2.1` — Desenvolvimento de Funcionalidades - API (Semanas 5 a 8)
-- `ATV2.2` — Testes - API (Semana 9)
-
-| Rubrica Curricular | ID Tarefa | Atividade Semanal | Descrição Detalhada da Tarefa | Estudante Responsável | GitHub Username | Status de Entrega | Evidência/Seção Temática | Autoria Git |
-| :---: | :---: | :---: | :--- | :--- | :---: | :---: | :--- | :---: |
-| **H36b** | `T2.1` | `ATV2.1` | Configuração do Boilerplate da API, Roteamento e Inicialização | [Nome do Aluno 1] | `username1` | `⌛ Não Iniciado` | [Instalação/README](src/backend/README.md) | [ ] |
-| **H36b** | `T2.2` | `ATV2.1` | Modelagem e Persistência de Dados (Conexão DB, ORM, Schemas) | Todos | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 2.1](#21-schema-e-diagrama-entidade-relacionamento) | [ ] |
-| **H36b** | `T2.3` | `ATV2.1` | Implementação de Endpoints CRUD e Lógica de Negócios Principal | Todos | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 3.0](#3-especificacao-avancada-de-endpoints) | [ ] |
-| **H36b** | `T2.4` | `ATV2.1` | Mecanismo de Segurança da API (Autenticação/Autorização JWT) | [Nome do Aluno 4] | `username4` | `⌛ Não Iniciado` | [Seção 3.3](#33-seguranca-e-autorizacao) | [ ] |
-| **H35b** | `T2.5` | `ATV2.1` | Gateway, Integração de Serviços Web e Clientes HTTP Externos | [Nome do Aluno 5] | `username5` | `⌛ Não Iniciado` | [Seção 2.2](#22-integracao-e-infraestrutura-distribuida) | [ ] |
-| **H36c** | `T2.6` | `ATV2.2` | Desenvolvimento de Testes Automatizados (Unitários/Integração) | Todos | `username1` `username2` `username3` `username4` `username5` `username6` | `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` `⌛ Não Iniciado` | [Seção 4.0](#4-estrategia-e-relatorio-de-testes-automatizados) | [ ] |
-| **H35c** | `T2.7` | `ATV2.1` | Construção de Dockerfile e Configuração de docker-compose | [Nome do Aluno 1] | `username1` | `⌛ Não Iniciado` | [Seção 5.1](#51-conteinerizacao-de-servicos) | [ ] |
-| **H36c** | `T2.8` | `ATV2.2` | Proposta de Implantação e Pipeline de CI/CD Backend | [Nome do Aluno 5] | `username5` | `⌛ Não Iniciado` | [Seção 5.2](#52-proposta-de-infraestrutura-de-deploy-e-ambiente-em-producao) | [ ] |
+| Rubrica | ID | Atividade | Tarefa | Estudante | GitHub | Status | Evidência |
+| :---: | :---: | :---: | :--- | :--- | :---: | :---: | :--- |
+| **H36b** | `T2.1` | `ATV2.1` | Boilerplate, roteamento e inicialização das APIs Node | Allan Viana | `AllanAviana` | `✔️ Entregue` | [`src/backend/`](./) |
+| **H36b** | `T2.2` | `ATV2.1` | Modelagem e persistência (Prisma, Neon, schema) | Andre Lopes | `dezim005` | `✔️ Entregue` | [Seção 2.1](#21-schema-e-diagrama-entidade-relacionamento) |
+| **H36b** | `T2.3` | `ATV2.1` | Endpoints CRUD e lógica de negócio | Giovanny Lisboa | `glisboapuc` | `✔️ Entregue` | [Seção 3](#3-especificacao-avancada-de-endpoints) |
+| **H36b** | `T2.4` | `ATV2.1` | Segurança da API (token HMAC, perfis, CORS) | Gustavo Veloso | `gust_2003` | `✔️ Entregue` | [Seção 3.3](#33-seguranca-e-autorizacao) |
+| **H35b** | `T2.5` | `ATV2.1` | API Gateway e integração dos microsserviços | Roberta Alves Lima | `RobertaAlvesLima` | `✔️ Entregue` | [Seção 2.2](#22-integracao-e-infraestrutura-distribuida) |
+| **H36c** | `T2.6` | `ATV2.2` | Testes automatizados (Vitest + Supertest) | Allan Viana | `AllanAviana` | `✔️ Entregue` | [Seção 4](#4-estrategia-e-relatorio-de-testes-automatizados) |
+| **H35c** | `T2.7` | `ATV2.1` | Dockerfile e docker-compose | Giovanny Lisboa | `glisboapuc` | `✔️ Entregue` | [Seção 5.1](#51-conteinerizacao-de-servicos) |
+| **H36c** | `T2.8` | `ATV2.2` | Proposta de deploy e CI/CD | Pedro Cassimiro | `pedroh-corr` | `✔️ Entregue` | [Seção 5.2](#52-proposta-de-infraestrutura-de-deploy-e-ambiente-em-producao) |
 
 ---
 
 # 1. Escopo e Objetivos do Backend
 
-[Insira aqui uma breve introdução descrevendo o papel e os objetivos técnicos do seu ecossistema de APIs de backend. Esclareça quais microserviços ou módulos compõem a solução, a escolha de tecnologias de desenvolvimento (SGBDs, frameworks) e o que se espera em termos de volumetria e capacidade transacional.]
+O backend do **VagaLivre** oferece APIs REST para o compartilhamento de vagas em condomínios: cadastro de moradores e síndicos, autenticação, consulta de disponibilidade, reservas e notificações.
+
+Em produção o cliente (web ou mobile) utiliza uma **porta única**, o API Gateway. O gateway encaminha o caminho completo da requisição ao microsserviço responsável.
+
+### Microsserviços
+
+| Serviço | Pasta | Responsável | Função |
+| :--- | :--- | :--- | :--- |
+| Gateway | [`gateway/`](./gateway/) | Roberta | Porta única HTTP |
+| Identidade | [`pedro/`](./pedro/) | Pedro | Login, token de sessão e `/auth/me` |
+| Usuários e condomínios | [`roberta/`](./roberta/) | Roberta | Cadastro, aprovação e CRUD |
+| Disponibilidade | [`allan/`](./allan/) | Allan | Listagem e filtros de vagas |
+| Reservas | [`gustavo/`](./gustavo/) | Gustavo | Criação, consulta e cancelamento |
+| Notificações | [`andre/`](./andre/) | André | Histórico de avisos e e-mail transacional |
+| Vagas (.NET) | [`giovanny/`](./giovanny/) | Giovanny | CRUD HATEOAS de vagas em ASP.NET Core |
+
+### Stack técnica
+
+- **APIs JS/TS:** Node.js, Express, Prisma 6, Vitest, Supertest
+- **API .NET:** ASP.NET Core 8, Entity Framework Core, Swagger
+- **Persistência:** PostgreSQL serverless na Neon (`vagaLivre*` + tabela `notifications`)
+- **Integração:** API Gateway com `http-proxy-middleware`
+- **Hospedagem:** Render (serviços HTTP) + Neon (banco)
+
+O volume esperado é condominial (dezenas a centenas de moradores). O Neon gerencia o *pool* de conexões; o gateway usa timeout de 60 segundos para absorver o *cold start* dos serviços.
+
+**Gateway em produção:** [https://gateway-api-d2uo.onrender.com](https://gateway-api-d2uo.onrender.com)
 
 ---
 
-# 2. Modelagem da Aplicação e Arquitetura de Dados `Andre`
+# 2. Modelagem da Aplicação e Arquitetura de Dados
 
-## 2.1. Schema e Diagrama Entidade-Relacionamento `Andre`
+*(Rubrica **H35b**)*
 
-O serviço de notificações foi projetado para garantir o registro individualizado, a rastreabilidade e a persistência do histórico de avisos enviados aos moradores do condomínio. A modelagem de dados utiliza o ORM **Prisma** conectado a uma instância do banco de dados relacional **PostgreSQL hospedado na plataforma Serverless Neon**.
+## 2.1. Schema e Diagrama Entidade-Relacionamento
 
-### A. DDL e Representação do Schema Prisma [schema.prisma](https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-2-pe6-t2-g09/blob/main/src/backend/andre/schema.prisma)
+O modelo lógico está no Prisma ([`allan/schema.prisma`](./allan/schema.prisma) e equivalentes nas demais APIs Node). As tabelas físicas no Neon seguem o prefixo `vagaLivre`.
 
-A entidade central do serviço é a tabela `Notification`, estruturada no arquivo de schema da seguinte forma:
+| Tabela | Chave | Relacionamentos | Observação |
+| :--- | :--- | :--- | :--- |
+| `vagaLivreCondominiums` | `id` | 1:N usuários | Nome e endereço do condomínio |
+| `vagaLivreRegisteredUsers` | `id` (e-mail único) | N:1 condomínio; 1:N vagas e reservas | Papéis `resident` / `manager`; status `pending` / `approved` / `denied` |
+| `vagaLivreParkingSpots` | `id` | N:1 dono; 1:N reservas | Tipos `compact`, `standard`, `suv`, `motorcycle`; disponibilidade em JSON |
+| `vagaLivreReservations` | `id` | N:1 vaga e N:1 usuário | `startTime` / `endTime` em `timestamptz` |
+| `notifications` | `id` | N:1 usuário | Histórico da API de avisos (André) |
 
-```
-// Módulo de Notificações - Vaga Livre
-model Notification {
-  id        String   @id @default(uuid())
-  userId    String   // Chave Estrangeira lógica referenciando a entidade User
-  title     String
-  message   String
-  type      String   @default("RESERVA_CONFIRMADA")
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("notifications")
-}
-```
-### B. Dicionário de Dados da Tabela `notifications`
-
-| Campo         | Tipo SQL       | Restrições                      | Descrição                                                            |
-| ------------- | -------------- | ------------------------------- | -------------------------------------------------------------------- |
-| **id**        | `VARCHAR(36)`  | **PK**, Not Null, Unique        | Identificador único universal (UUID) da notificação.                 |
-| **userId**    | `VARCHAR(36)`  | **FK** (Lógica), Not Null       | Identificador do usuário/morador destinatário da mensagem [2, 11]. |
-| **title**     | `VARCHAR(255)` | Not Null                        | Título do aviso (ex: "Reserva Confirmada") [2, 11].                |
-| **message**   | `TEXT`         | Not Null                        | Conteúdo descritivo detalhado da notificação enviada [2, 11].      |
-| **type**      | `VARCHAR(50)`  | Default: `'RESERVA_CONFIRMADA'` | Categoria do evento gerador da notificação.                          |
-| **read**      | `BOOLEAN`      | Default: `false`                | Status de leitura da mensagem pelo usuário.                          |
-| **createdAt** | `TIMESTAMP`    | Default: `NOW()`                | Data e hora exatas da criação e envio do registro.                   |
-| **updatedAt** | `TIMESTAMP`    | UpdatedAt                       | Data e hora da última modificação do registro.                       |
-
-### C. Diagrama Entidade-Relacionamento (DER)
-
-Abaixo é apresentada a representação lógica do relacionamento entre a entidade de usuários/moradores e o serviço de notificações do **Vaga Livre**:
+Diagrama ER (renderizado pelo GitHub via [Mermaid](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)):
 
 ```mermaid
 erDiagram
-    USER ||--o{ NOTIFICATION : "recebe"
-    
-    USER {
+    VAGA_LIVRE_CONDOMINIUMS ||--o{ VAGA_LIVRE_REGISTERED_USERS : possui
+    VAGA_LIVRE_REGISTERED_USERS ||--o{ VAGA_LIVRE_PARKING_SPOTS : disponibiliza
+    VAGA_LIVRE_REGISTERED_USERS ||--o{ VAGA_LIVRE_RESERVATIONS : realiza
+    VAGA_LIVRE_PARKING_SPOTS ||--o{ VAGA_LIVRE_RESERVATIONS : recebe
+    VAGA_LIVRE_REGISTERED_USERS ||--o{ NOTIFICATIONS : recebe
+
+    VAGA_LIVRE_CONDOMINIUMS {
         string id PK
         string name
-        string email
+        string address
     }
-    
-    NOTIFICATION {
+    VAGA_LIVRE_REGISTERED_USERS {
+        string id PK
+        string name
+        string email UK
+        string role
+        string status
+        string condominiumId FK
+    }
+    VAGA_LIVRE_PARKING_SPOTS {
+        string id PK
+        string number
+        string type
+        string location
+        boolean isAvailable
+        string ownerId FK
+        json availability
+    }
+    VAGA_LIVRE_RESERVATIONS {
+        string id PK
+        string spotId FK
+        string userId FK
+        datetime startTime
+        datetime endTime
+        string vehiclePlate
+    }
+    NOTIFICATIONS {
         string id PK
         string userId FK
         string title
         string message
         string type
         boolean read
-        datetime createdAt
-        datetime updatedAt
     }
 ```
 
-<img width="1909" height="903" alt="table notification" src="https://github.com/user-attachments/assets/55aa9335-a9aa-470e-98ef-6e924d8f2f3b" />
+Seed compartilhado para testes: [`seed.js`](./seed.js). Script da tabela de notificações: [`add-notifications.sql`](./add-notifications.sql).
 
-*Tabelas criadas diretamente no painel da **Neon PostgreSQL**, mostrando os registros inseridos após os testes de confirmação de reserva*
+## 2.2. Integração e Infraestrutura Distribuída
 
+A solução é um conjunto de microsserviços HTTP independentes, orquestrados pelo gateway.
 
-## 2.2. Integração e Infraestrutura Distribuída `Andre`
-
-A arquitetura do Backend do **Vaga Livre** foi projetada sob o paradigma de microsserviços/serviços distribuídos, visando alta disponibilidade, desacoplamento e tempo de resposta otimizado para o usuário final.
-
-```
-[ Frontend (React/Next) ]
-       │
-       │  (Chamada HTTP / CORS)
-       ▼
-[ Backend API (Express/Node.js) ] ── (Prisma Pool) ──► [ Neon PostgreSQL (Cloud) ]
-       │
-       │  (Requisição Assíncrona HTTPS / Porta 443)
-       ▼
-[ Resend API (Email Service) ] ──────────────────────► [ Caixa de Entrada do Morador ]
-
-```
-
-### 1. Comunicação Entre Serviços e Gestão de CORS
-
-O **Frontend** e o **Backend** da aplicação operam como serviços independentes (*Web Services*) implantados na nuvem através do **Render**.
-
-* A comunicação cross-origin é gerenciada pelo middleware `cors()` no servidor Express (`server.ts`).
-* O endereço do Backend é injetado dinamicamente no Frontend por meio da variável de ambiente `NEXT_PUBLIC_API_URL`, garantindo a segurança e o desacoplamento das URLs de produção.
-
-### 2. Gerenciamento de Concorrência e Connection Pooling (Neon + Prisma)
-
-Para gerenciar múltiplas requisições simultâneas sem esgotar os recursos de banco de dados:
-
-* É utilizado o **Prisma Client** encapsulado como uma instância *singleton*.
-* O banco de dados **Neon PostgreSQL** utiliza uma camada de *Connection Pooling Serverless*. Isso permite que centenas de conexões simultâneas vindas das instâncias do Render sejam multiplexadas eficientemente sem causar estouro de memória no banco relacional.
-
-### 3. Tratamento Assíncrono Não-Bloqueante (Non-blocking I/O)
-
-Para evitar travamentos da interface e tempo de espera excessivo (*latency*) ao confirmar uma reserva:
-
-* O controller (`NotificationController.ts`) executa a gravação da notificação no banco via Prisma (`await prisma.notification.create(...)`) e **responde imediatamente ao cliente HTTP** com o código de sucesso `201 Created`.
-* O disparo do e-mail é delegado para execução em segundo plano (*background execution*) através de uma Promise assíncrona não-bloqueante.
-
-### 4. Resiliência e Tráfego de E-mail por API HTTP (Resend)
-
-Para contornar o bloqueio de portas SMTP tradicionais (25, 465, 587) comum em infraestruturas Serverless/PaaS em nuvem como o Render:
-
-* A arquitetura adota a **Resend API**, realizando o envio de e-mails transacionais via chamadas **REST/HTTPS na porta 443**.
-* Essa abordagem elimina *timeouts* de rede (`ETIMEDOUT` / `ENETUNREACH`), garante entrega instantânea e isola falhas de infraestrutura de rede externa.
-
-<img width="1903" height="664" alt="logs resend" src="https://github.com/user-attachments/assets/46585dde-2053-4382-b51d-48629cec8e1c" /> *Log de disparo bem-sucedido via Resend API registrado no ambiente Resend*
-
-<img width="1846" height="400" alt="email recebido" src="https://github.com/user-attachments/assets/1de8fadf-6755-465e-987c-a835f0b0eb9d" /> *E-mail transacional recebido pelo morador após a confirmação da reserva na interface*
-
-# 3. Especificação Avançada de Endpoints `Andre`
-
-Abaixo estão listados os contratos reais implementados no diretório [src/backend/andre](src/backend/andre) para o módulo de **Notificações**, detalhando os métodos HTTP, rotas, payloads de requisição/resposta, códigos de status e mecanismos de segurança da API.
-
-### 3.1. Relação Geral de Endpoints `Andre`
-
-| Método / Verbo | Caminho da Rota (URI)         | Descrição do Recurso / Ação                                    | Reclama Autenticação? | Responsável Técnico |
-| -------------- | ----------------------------- | -------------------------------------------------------------- | --------------------- | ------------------- |
-| `POST`         | `/notifications`              | Cria notificação no banco Neon e dispara e-mail via Resend API | Sim                   | André Lopes         |
-| `GET`          | `/notifications/user/:userId` | Listagem de todas as notificações gravadas de um morador       | Sim                   | André Lopes         |
-| `PATCH`        | `/notifications/:id/read`     | Atualiza o status da notificação para lida (`read: true`)      | Sim                   | André Lopes         |
-| `DELETE`       | `/notifications/:id`          | Remove um registro de notificação do histórico do usuário      | Sim                   | André Lopes         |
----
-
-### 3.2. Detalhamento dos Payloads de Requisição e Resposta (Exemplos) `Andre`
-
-#### Endpoint 1: `/notifications` (Criação e Disparo de Notificação)
-
-* **Verbo**: `POST`
-* **Headers Requeridos**: `Content-Type: application/json`
-* **Payload de Entrada (JSON)**:
-
-```
-{
-  "userId": "usr-882319",
-  "userEmail": "andre.lopes.1521271@sga.pucminas.br",
-  "title": "Reserva Confirmada",
-  "message": "Sua reserva para a vaga A-12 foi confirmada com sucesso!",
-  "type": "RESERVA_CONFIRMADA"
-}
-
+```mermaid
+flowchart LR
+    Front[Web / Mobile] --> GW[API Gateway]
+    GW -->|/api/v1/auth| Pedro[Identidade]
+    GW -->|/api/v1/users e condominiums| Roberta[Usuários]
+    GW -->|/api/v1/spots| Allan[Disponibilidade]
+    GW -->|/api/v1/reservations| Gustavo[Reservas]
+    GW -->|/notifications| Andre[Notificações]
+    Pedro --> Neon[(PostgreSQL Neon)]
+    Roberta --> Neon
+    Allan --> Neon
+    Gustavo --> Neon
+    Andre --> Neon
 ```
 
-* **Payload de Resposta de Sucesso (** **201 Created** **)**:
+- **Síncrono:** o gateway faz proxy HTTP e devolve a resposta do serviço de destino, preservando o pathname (`/api/v1/spots`, `/api/v1/auth`, etc.).
+- **Concorrência:** Prisma Client + *connection pooling* serverless da Neon.
+- **Resiliência:** timeout de 60s no proxy; em falha de *upstream* o gateway responde `502`.
+- **Assíncrono pontual:** o serviço de notificações grava o aviso no banco e dispara e-mail via Resend em segundo plano.
 
-```
-{
-  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "userId": "usr-882319",
-  "title": "Reserva Confirmada",
-  "message": "Sua reserva para a vaga A-12 foi confirmada com sucesso!",
-  "type": "RESERVA_CONFIRMADA",
-  "read": false,
-  "createdAt": "2026-09-24T22:39:42.102Z",
-  "updatedAt": "2026-09-24T22:39:42.102Z"
-}
+Rotas do gateway ([`gateway/server.js`](./gateway/server.js)):
 
-```
-
-* **Comportamento em caso de Erro (** **400 Bad Request** **\- Parâmetro Ausente)**:
-
-```
-{
-  "error": "Campos obrigatórios ausentes."
-}
-
-```
-
-* **Comportamento em caso de Erro Interno (** **500 Internal Server Error** **)**:
-
-```
-{
-  "error": "Erro ao processar notificação."
-}
-
-```
+| Prefixo | Destino |
+| :--- | :--- |
+| `/api/v1/auth` | API do Pedro |
+| `/api/v1/users` e `/api/v1/condominiums` | API da Roberta |
+| `/api/v1/spots` | API do Allan |
+| `/api/v1/reservations` | API do Gustavo |
+| `/notifications` | API do André |
+| `/api/ParkingSpots` | API .NET do Giovanny (quando `GIOVANNY_API` está configurada) |
 
 ---
 
-#### Endpoint 2: `/notifications/user/:userId` (Listagem de Notificações do Morador)
+# 3. Especificação Avançada de Endpoints
 
-* **Verbo**: `GET`
-* **Parâmetros de Rota**: `userId` (string UUID do morador)
-* **Payload de Resposta de Sucesso (** **200 OK** **)**:
+*(Rubrica **H36b**)*
 
+Contratos implementados em `src/backend/`. Em produção, o prefixo público é o gateway.
+
+## 3.1. Relação Geral de Endpoints
+
+| Método | Caminho | Descrição | Controle de acesso | Responsável |
+| :---: | :--- | :--- | :--- | :--- |
+| `GET` | `/health` | Saúde do serviço / do gateway | Público | Equipe |
+| `POST` | `/api/v1/auth/login` | Autentica morador/síndico e emite token HMAC | Público (credenciais) | Pedro |
+| `GET` | `/api/v1/auth/me` | Recupera o usuário da sessão | Token HMAC (Bearer) | Pedro |
+| `POST` | `/api/v1/auth/logout` | Encerra a sessão no cliente | Sessão | Pedro |
+| `GET` | `/api/v1/condominiums` | Lista condomínios | Consulta autenticável | Roberta |
+| `GET` | `/api/v1/condominiums/:id` | Busca condomínio | Consulta autenticável | Roberta |
+| `POST` | `/api/v1/condominiums` | Cadastra condomínio | Síndico / operação administrativa | Roberta |
+| `GET` | `/api/v1/users` | Lista usuários (filtros `status`, `condominiumId`) | Síndico / operação administrativa | Roberta |
+| `GET` | `/api/v1/users/:id` | Busca usuário | Identidade do recurso | Roberta |
+| `POST` | `/api/v1/users` | Cadastro (primeiro usuário = síndico aprovado) | Público (onboarding) | Roberta |
+| `PATCH` | `/api/v1/users/:id` | Atualiza perfil ou status (`approved` / `denied`) | Síndico / dono do perfil | Roberta |
+| `DELETE` | `/api/v1/users/:id` | Remove usuário | Operação administrativa | Roberta |
+| `GET` | `/api/v1/spots` | Lista vagas (`q`, `type`, `status`, `date`, `ownerId`) | Consulta autenticável | Allan |
+| `GET` | `/api/v1/spots/:id` | Detalhe da vaga | Consulta autenticável | Allan |
+| `GET` | `/api/v1/reservations` | Lista reservas (`userId`, `spotId`) | Identidade do morador | Gustavo |
+| `GET` | `/api/v1/reservations/:id` | Detalhe da reserva | Identidade do recurso | Gustavo |
+| `POST` | `/api/v1/reservations` | Cria reserva (valida disponibilidade e conflito) | Identidade do morador (`userId`) | Gustavo |
+| `DELETE` | `/api/v1/reservations/:id` | Cancela reserva | Autorização do dono (`userId`) | Gustavo |
+| `GET` | `/notifications/user/:userId` | Histórico de avisos do morador | Identidade do morador | André |
+| `POST` | `/notifications` | Registra aviso e envia e-mail | Operação de domínio | André |
+| `PATCH` | `/notifications/:id/read` | Marca aviso como lido | Identidade do recurso | André |
+| `DELETE` | `/notifications/:id` | Remove aviso | Identidade do recurso | André |
+| `GET` `POST` `PUT` `DELETE` | `/api/ParkingSpots` | CRUD HATEOAS de vagas (.NET) | Recurso de vaga | Giovanny |
+
+## 3.2. Detalhamento dos Payloads
+
+### `POST /api/v1/auth/login`
+
+- **Headers:** `Content-Type: application/json`
+- **Entrada:**
+
+```json
+{
+  "email": "teste@vagalivre.com",
+  "password": "123456"
+}
 ```
-[
-  {
-    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "userId": "usr-882319",
-    "title": "Reserva Confirmada",
-    "message": "Sua reserva para a vaga A-12 foi confirmada com sucesso!",
-    "type": "RESERVA_CONFIRMADA",
-    "read": false,
-    "createdAt": "2026-09-24T22:39:42.102Z"
+
+- **Sucesso (`200`):**
+
+```json
+{
+  "message": "Login realizado com sucesso.",
+  "data": {
+    "token": "eyJ...assinaturaHMAC",
+    "user": {
+      "id": "user-demo",
+      "name": "Morador Teste",
+      "email": "teste@vagalivre.com",
+      "role": "resident",
+      "status": "approved"
+    }
   }
-]
-
-```
-
----
-
-#### Endpoint 3: `/notifications/:id/read` (Marcar Notificação como Lida)
-
-* **Verbo**: `PATCH`
-* **Parâmetros de Rota**: `id` (string UUID da notificação)
-* **Payload de Resposta de Sucesso (** **200 OK** **)**:
-
-```
-{
-  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "read": true,
-  "updatedAt": "2026-09-24T22:45:10.512Z"
 }
 ```
 
----
+- **Erros:** `400` campos obrigatórios; `401` credenciais inválidas; `403` conta pendente ou negada pelo síndico; `500` falha interna.
 
-### 3.3. Segurança e Autorização `Andre`
+### `GET /api/v1/auth/me`
 
-A segurança da infraestrutura e do tráfego de dados da API de Notificações é fundamentada em quatro pilares principais:
+- **Headers:** `Authorization: Bearer <token>`
+- **Sucesso (`200`):** `{ "data": { "id", "name", "email", "role", "status", ... } }`
+- **Erros:** `401` token inválido, expirado ou usuário sem sessão aprovada.
 
-1. **Criptografia em Trânsito (HTTPS/TLS)**: Toda a comunicação entre a aplicação cliente (Frontend) e a API Backend hospedada no **Render** ocorre através de conexões seguras criptografadas sob o protocolo **HTTPS (TLS 1.3)** na porta padrão `443`.
-2. **Política de Origem Cruzada (CORS)**: O servidor Express implementa o middleware `cors()` configurado para autorizar exclusivamente requisições vinda do domínio do Frontend do **Vaga Livre**, prevenindo ataques de origens não autorizadas (*Cross-Site Request Forgery / CSRF*).
-3. **Gerenciamento de Credenciais e Variáveis de Ambiente**: Chaves sensíveis como a URL do banco PostgreSQL Neon (`DATABASE_URL`) e a chave da API do Resend (`RESEND_API_KEY`) são isoladas e mantidas estritamente no ambiente do servidor na nuvem (**Render Environment Variables**), nunca expostas no código-fonte nem enviadas ao cliente/navegador.
-4. **Tráfego Seguro de E-mails via HTTPS**: Para evitar varreduras de porta e ataques de *man-in-the-middle* comuns em conexões SMTP puras, a API dispara e-mails através do SDK oficial da **Resend API**, autenticando via chave de API criptografada e realizando requisições HTTPS REST diretas na porta `443`.
+### `GET /api/v1/spots`
+
+- **Query:** `q`, `type` (`compact` \| `standard` \| `suv` \| `motorcycle`), `status` (`all` \| `available` \| `occupied`), `date` (`YYYY-MM-DD`), `ownerId`
+- **Sucesso (`200`):**
+
+```json
+{
+  "data": [
+    {
+      "id": "spot-demo",
+      "number": "A-01",
+      "type": "standard",
+      "location": "Subsolo 1",
+      "isAvailable": true,
+      "ownerId": "user-demo",
+      "availability": [],
+      "reservations": []
+    }
+  ]
+}
+```
+
+- **Erros:** `400` filtro inválido; `404` no `GET /api/v1/spots/:id`; `500` falha de consulta.
+
+### `POST /api/v1/reservations`
+
+- **Entrada:**
+
+```json
+{
+  "spotId": "spot-demo",
+  "userId": "user-demo",
+  "startTime": "2026-10-08",
+  "endTime": "2026-10-10",
+  "vehiclePlate": "XYZ-9A87"
+}
+```
+
+- **Sucesso (`201`):** `{ "message": "Vaga reservada com sucesso!", "data": { "id", "spotId", "userId", "startTime", "endTime", "vehiclePlate" } }`
+- **Erros:** `400` período inválido ou fora da disponibilidade do dono; `404` usuário ou vaga; `409` conflito de agenda; `403` no cancelamento por outro morador.
+
+### `POST /api/v1/users`
+
+- **Entrada:** `{ "name", "email", "password", "condominiumId" }`
+- **Sucesso (`201`):** usuário criado (primeiro cadastro vira síndico `approved`; demais ficam `pending` para o síndico).
+- **Erros:** `400` campos ausentes; `404` condomínio; `409` e-mail duplicado.
+
+## 3.3. Segurança e Autorização
+
+A segurança do canal combina quatro camadas:
+
+1. **CORS** habilitado nas APIs para os clientes web e mobile.
+2. **Segredos fora do repositório:** `DATABASE_URL`, `JWT_SECRET` e credenciais de e-mail ficam nas variáveis de ambiente do Render. `.env` está no `.gitignore`.
+3. **Token de sessão (HMAC-SHA256):** o serviço de identidade assina um payload `{ id, email, role, exp }` com `crypto.createHmac("sha256", JWT_SECRET)`. O cliente envia `Authorization: Bearer <token>`. A validade é de **24 horas**. A rota `GET /api/v1/auth/me` valida assinatura, expiração e status `approved`.
+4. **RBAC de domínio:**
+   - `manager` (síndico) — aprova ou nega cadastros (`PATCH` de `status`)
+   - `resident` (morador) — consulta vagas e reserva
+   - login somente com conta `approved`
+   - cancelamento de reserva somente pelo `userId` dono (`403` caso contrário)
 
 ---
 
 # 4. Estratégia e Relatório de Testes Automatizados
 
-A estratégia de testes automatizados adotada pela equipe foca em garantir a confiabilidade e o correto funcionamento de cada serviço (CRUD) isoladamente. Conforme alinhado, cada membro da equipe é responsável por desenvolver os testes unitários e de integração do seu respectivo serviço. 
+*(Rubrica **H36c**)*
 
-Para a arquitetura do projeto (Node.js com TypeScript e Prisma), optamos por utilizar a técnica de **Mocking** (simulação). Com isso, simulamos as respostas do banco de dados (Neon) e as chamadas para serviços externos (como disparo de e-mails via Resend/Nodemailer). Essa estratégia protege o banco de dados de produção contra poluição por dados fictícios, economiza as cotas de consumo de APIs de terceiros e garante que os testes rodem de forma extremamente rápida.
+A equipe testa cada microsserviço **localmente**, com **Vitest** e **Supertest**. O Prisma é mockado: a suíte não depende do Neon nem de credenciais. Os casos cobrem fluxo de sucesso e caminhos de exceção.
 
-1. **Ferramenta de Asserção Utilizada**: **Vitest** (framework nativo e otimizado para TypeScript) integrado ao **Supertest** (para testar as rotas e requisições HTTP localmente).
-2. **Método de Execução do Comando de Teste**:
-   Para rodar a suíte de testes localmente, basta clonar o repositório, instalar as dependências com `npm install` e executar o comando no terminal (dentro da pasta do backend):
-   `npm run test` (que executa o `vitest run` por debaixo dos panos).
-3. **Cobertura Esperada/Alcançada**: Alcançamos 100% de aprovação nos testes criados para o Serviço de Notificações, cobrindo as validações de dados (falhas propositais) e os fluxos de sucesso do CRUD.
+1. **Ferramenta:** Vitest + Supertest  
+2. **Comando** (na pasta do serviço):
 
-### Quadro de Cobertura de Testes:
+```bash
+cd src/backend/allan    && npm test
+cd src/backend/pedro    && npm test
+cd src/backend/roberta  && npm test
+cd src/backend/gustavo  && npm test
+cd src/backend/andre    && npm test
+```
 
-| Módulo do Sistema | Tipo de Teste | Cenários Avaliados | Status da Suíte | Responsável |
-| :--- | :--- | :--- | :---: | :--- |
-| **Serviço de Notificações** | Unitário | Criação: Validação de campos obrigatórios ausentes (Erro 400). | ✔️ Passou | André Lopes |
-| **Serviço de Notificações** | Integração | POST: Criação de notificação e disparo de e-mail mockado (Status 201). | ✔️ Passou | André Lopes |
-| **Serviço de Notificações** | Integração | GET: Listagem de notificações por usuário específico (Status 200). | ✔️ Passou | André Lopes |
-| **Serviço de Notificações** | Integração | PATCH: Atualização de notificação (marcar como lida) (Status 200). | ✔️ Passou | André Lopes |
-| **Serviço de Notificações** | Integração | DELETE: Exclusão permanente de notificação (Status 204). | ✔️ Passou | André Lopes |
+No PowerShell, se `npm.ps1` estiver bloqueado:
 
-### Evidência de Execução dos Testes
-Abaixo está o registro da execução (log do terminal) atestando que todas as suítes passaram com sucesso:
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+npm test
+```
 
-<img width="1084" height="460" alt="testes terminal" src="https://github.com/user-attachments/assets/d63f6b00-f749-49e1-852d-b057e8f0d807" />
+3. **Resultado local da suíte:** 11 (Allan) + 12 (Pedro) + 23 (Roberta) + 16 (Gustavo) + 7 (André).
+
+| Módulo | Tipo | Cenários avaliados | Status |
+| :--- | :--- | :--- | :---: |
+| Disponibilidade — [`allan/tests/spots.spec.js`](./allan/tests/spots.spec.js) | Integração (DB mockado) | Health, listagem, filtros, validação `400`, detalhe `200`/`404`, falha `500` | ✔️ Passou (11) |
+| Autenticação — [`pedro/tests/auth.spec.js`](./pedro/tests/auth.spec.js) | Integração (DB mockado) | Login com credenciais, pendente, negado, token, `/me`, logout, falha `500` | ✔️ Passou (12) |
+| Usuários e condomínios — [`roberta/tests/users.spec.js`](./roberta/tests/users.spec.js) | Integração (DB mockado) | CRUD, primeiro síndico, morador pendente, e-mail duplicado, status inválido | ✔️ Passou (23) |
+| Reservas — [`gustavo/tests/reservations.spec.js`](./gustavo/tests/reservations.spec.js) | Integração (DB mockado) | Criação, conflito `409`, disponibilidade, cancelamento pelo dono | ✔️ Passou (16) |
+| Notificações — [`andre/tests/`](./andre/tests/) | Unitário + integração (DB e e-mail mockados) | POST, GET, PATCH, DELETE e validação de campos | ✔️ Passou (7) |
+
+O gateway publicado em [https://gateway-api-d2uo.onrender.com/api/v1/spots](https://gateway-api-d2uo.onrender.com/api/v1/spots) confirma a integração ponta a ponta com o Neon após o deploy.
 
 ---
 
 # 5. Instruções de Implantação e DevOps
 
-*(Esta seção atende diretamente à rubrica **H35c**)*
-
-Abaixo detalhe como a aplicação backend é empacotada de forma portável e como seria o processo ideal de implantação/hospedagem em nuvem (proposta teórica). **Nota:** Não há cobrança de deploy prático em nuvem nesta disciplina; a avaliação consiste na demonstração teórica da arquitetura física proposta e nas automações de build/testes locais.
+*(Rubrica **H35c**)*
 
 ## 5.1. Conteinerização de Serviços
 
-[Insira aqui a justificativa e os caminhos de arquivos das imagens Docker criadas. Demonstre como múltiplos contêineres se comunicam na mesma rede por meio de um arquivo `docker-compose.yml` que sobe a API de backend juntamente com quaisquer instâncias de banco de dados ou mensageria de forma auto-contida para execução e testes locais.]
+A API .NET de vagas é empacotada com Docker para execução local auto-contida (API + PostgreSQL na mesma rede):
 
-- **Caminho do Dockerfile do Backend**: `[src/backend/Dockerfile](src/backend/Dockerfile)` *(adicione o link do arquivo se ele já existir)*
-- **Caminho do Docker Compose**: `[docker-compose.yml](docker-compose.yml)` *(opcional se na raiz)*
+- Dockerfile: [`giovanny/Dockerfile`](./giovanny/Dockerfile)
+- Compose: [`giovanny/docker-compose.yml`](./giovanny/docker-compose.yml)
 
----
+```bash
+cd src/backend/giovanny
+docker compose up --build
+```
+
+- API: `http://localhost:8080`
+- Swagger: `http://localhost:8080/swagger`
+
+As APIs Node sobem com `npm start` em cada pasta (`node server.js` ou `npx tsx server.ts` no André) e compartilham o mesmo `DATABASE_URL` da Neon.
 
 ## 5.2. Proposta de Infraestrutura de Deploy e Ambiente em Produção
 
-[Descreva de forma conceitual como seria estruturado o deploy contínuo (CI/CD) para o ambiente de produção. Por exemplo, indique como seria configurado o GitHub Actions para rodar testes locais e como seria a topologia de implantação na nuvem (ex: Render, AWS, Fly.io, Azure).]
+**Modelo de CI/CD:** a cada *push* ou *pull request* na `main`, o GitHub Actions executa `npm test` nas pastas `allan`, `pedro`, `roberta`, `gustavo` e `andre`. O merge segue com a suíte verde. O Render faz o deploy automático a partir da `main`, com o *root directory* apontando para a pasta de cada microsserviço.
 
-- **Modelo de CI/CD Planejado**: [Indique que ações seriam realizadas a cada push/pull request para validar o código, como testes rodando automaticamente.]
-- **Arquitetura Física Proposta**: [Apresente as premissas de arquitetura de hospedagem planejadas: onde a API responderia, como seriam geridos os bancos de dados em nuvem e variáveis de ambiente secretas.]
+**Arquitetura física:**
+
+```mermaid
+flowchart TB
+    Dev[Push na main] --> GHA[GitHub Actions - npm test]
+    GHA --> Render[Render Web Services]
+    Render --> GW[Gateway]
+    Render --> APIs[Microsserviços Node e .NET]
+    APIs --> Neon[(Neon PostgreSQL)]
+    Client[Web / Mobile] --> GW
+    GW --> APIs
+```
+
+- **HTTP:** um Web Service Render por API + o gateway como host público dos fronts
+- **Dados:** Neon (Postgres + pooler)
+- **Segredos:** painel do Render (`DATABASE_URL`, `JWT_SECRET`, `ALLAN_API`, `GUSTAVO_API`, `PEDRO_API`, `ROBERTA_API`, `ANDRE_API`)
+
+| Serviço | URL |
+| :--- | :--- |
+| Gateway | [https://gateway-api-d2uo.onrender.com](https://gateway-api-d2uo.onrender.com) |
+| Disponibilidade | [https://vaga-livre-api.onrender.com](https://vaga-livre-api.onrender.com) |
+| Reservas | [https://gusstavo-api.onrender.com](https://gusstavo-api.onrender.com) |
+| Identidade | [https://pmv-si-2026-2-pe6-t2-g09-1.onrender.com](https://pmv-si-2026-2-pe6-t2-g09-1.onrender.com) |
+| Usuários | [https://pmv-si-2026-2-pe6-t2-g09-1-jbk9.onrender.com](https://pmv-si-2026-2-pe6-t2-g09-1-jbk9.onrender.com) |
+| Notificações | [https://andre-api-bhnv.onrender.com](https://andre-api-bhnv.onrender.com) |
 
 ---
 
 # 6. Referências Acadêmicas e de Engenharia
 
-[Registre as referências que deram suporte técnico para a modelagem lógica, banco de dados ou metodologias de automação do backend das APIs.]
-
-1. **DATE, C. J**. *Introdução a Sistemas de Bancos de Dados*. Rio de Janeiro: Elsevier, 2004.
-2. **RICHARDSON, Leonard; RUBY, Sam**. *RESTful Web Services*. O'Reilly Media, 2007.
-3. [Adicione referências de documentação oficial, SGBDs ou bibliotecas utilizadas].
-
+1. DATE, C. J. *Introdução a Sistemas de Bancos de Dados*. Rio de Janeiro: Elsevier, 2004.
+2. RICHARDSON, Leonard; RUBY, Sam. *RESTful Web Services*. Sebastopol: O’Reilly Media, 2007.
+3. Prisma. *Prisma Client — PostgreSQL*. <https://www.prisma.io/docs>
+4. Neon. *Serverless Postgres*. <https://neon.tech/docs>
+5. Express. *API reference*. <https://expressjs.com>
+6. Vitest. *Documentation*. <https://vitest.dev>
+7. GitHub. *Creating diagrams (Mermaid)*. <https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams>
+8. http-proxy-middleware. <https://github.com/chimurai/http-proxy-middleware>
+9. Microsoft. *ASP.NET Core Web API*. <https://learn.microsoft.com/aspnet/core>
